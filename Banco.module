@@ -13,6 +13,7 @@ $items['Banco']=array(
 return $items;
 }
 
+//indicadores de corrupcion en Colombia 
 
 function indicadores(){
 
