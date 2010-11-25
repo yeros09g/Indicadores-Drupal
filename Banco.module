@@ -1,0 +1,98 @@
+<?php
+/**
+*implementacion de modulo
+*/
+function Banco_menu(){
+$items['Banco']=array(
+'title'=>'Indicadores corrupcion en Colombia',
+'description'=>'Imprecion de Indicador',
+'page callback'=>'indicadores',
+'type'=>MENU_NORMAL_ITEM,
+'access callback'=>TRUE,
+);
+return $items;
+}
+
+
+function indicadores(){
+
+$resultado=drupal_http_request("http://api.worldbank.org/es/countries/COL/indicators/EG.USE.CRNW.KT.OE?per_page=10&date=1990:2010");
+$re1=simplexml_load_string($resultado->data);
+
+
+
+$i=1;
+
+foreach($re1->children('http://www.worldbank.org')->data as $dato)
+{
+	$indicador=$dato->indicator;
+	$ciudad=$dato->country;
+	$fecha=$dato->date;
+	$valor=$dato->value;
+
+	if ($i==1)
+	{
+	  	$cadena1="$fecha";
+		$cadena2="$valor";		
+	}
+	
+
+	
+	
+
+	
+	/**print $indicador;
+	print "\t";
+	
+	
+	print $ciudad;
+	print "\t";
+	
+	
+	print $fecha;
+	print "\t";
+	
+	
+	print $fecha;
+	print "\t";
+	
+	print $valor;
+	print "\n";
+	print "\n";*/
+
+	
+	if ($i==2)
+	{
+
+	$cadena1="$cadena1"."|"."$fecha";
+
+	$cadena2="$cadena2".","."$valor";
+	}
+
+	$i=2;
+	
+	
+}
+//print $cadena1;
+//print $cadena2;
+
+$proy="<center><img src='http://chart.apis.google.com/chart?cht=p3&chd=t:$cadena2&chs=440x200&chl=$cadena1&chco=AA0033&chtt=DIAGRAMA%20DE%20TORTA'/>"."\n"."<img src='http://chart.apis.google.com/chart?chxl=1:|$cadena1&chxr=0,0,7000|1,0,105&chxt=y,x&chbh=a&chs=440x289&cht=bvg&chco=3A5EC1&chds=0,7000&chd=t:$cadena2&chma=0,5&chco=49188F&chtt=DIAGRAMA%20DE%20BARRAS'/>";
+
+//$proy= "<img src='http://chart.apis.google.com/chart?cht=p3&chd=t:$cadena2&chs=440x200&chl=$cadena1'/>";
+
+//print pre imprimir organizado hacia abajo
+
+
+
+if ($resultado->code=200)
+{
+	$datos==$resultado->data;
+	if(is_array($datos))
+	{
+	print "<img src='http://chart.apis.google.com/chart?cht=p3&chd=t:60,40&chs=250x100&chl=Hello|World'/>";
+	}
+}
+
+return "$proy";
+
+}
